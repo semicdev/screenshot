@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+<link rel="stylesheet" href="http://sctcloud.com.mx/tools/cdn/bootstrap/3.2.0/css/bootstrap.min.css">
+<style type="text/css">
+  #map-canvas{
+    height: 300px;
+  }
+</style>
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+
+</head>
+<body class="container">
+   
+  <div class="row">
+    <div class="col-lg-12"><h1 class="text-center">ScreenShot APP</h1><p class="text-center">guardados MONGODB</p></div>
+    <div class="col-lg-12">
+      <button class="btn" id="generar">Generar Mapa</button><button class="btn" id="ver">Renderizar imagen</button><button class="btn" id="lista" >Lista de Imagenes</button>
+    </div>
+    <img id="izquierda"  class="col-lg-4">
+    <img id="central"  class="col-lg-4">
+    <img id="derecha"  class="col-lg-4">
+  </div>
+
+  <div class="row">
+    <div id="map-canvas" class="col-lg-6"></div>
+    <p id="urlMap"></p>
+  </div>
+
+
+
+<div id="dialog" title="Basic dialog">
+<button class="btn" id="guardar">guardar</button>
+  <canvas id="myCanvas" width="1200" height="600"></canvas>
+</div>
+
+
+<img id="static"class="col-lg-12" style="display: none;">
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+ <script type="text/javascript" src="resources/js/app.js"></script>
+ <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+ <script src="http://sctcloud.com.mx/tools/cdn/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
+ <script type="text/javascript">
+var c=document.getElementById("myCanvas");
+var imgTag = document.getElementById("static");
+ imgTag.crossOrigin= "anonymous";
+var izquierda=document.getElementById("izquierda");
+ //izquierda.crossOrigin= "anonymous";
+var central=document.getElementById("central");
+// central.crossOrigin= "anonymous";
+var derecha=document.getElementById("derecha");
+
+
+ izquierda.src = "http://localhost/PRUEBAS/screenshot/includes/curl.php?side=l&foto=0000000001_S.JPEG";
+ central.src   = "http://localhost/PRUEBAS/screenshot/includes/curl.php?side=c&foto=0000000001_S.JPEG";
+ derecha.src   = "http://localhost/PRUEBAS/screenshot/includes/curl.php?side=d&foto=0000000001_S.JPEG";
+
+$("#generar").click(function(event) {
+  /* Act on the event */
+  $('#urlMap').text(mapa.url());
+  mapa.setMapa($("#static"));
+
+  setTimeout(renderizar,5000);
+
+});
+$("#guardar").click(function(event) {
+  /* Act on the event */
+ guardarImg(c.toDataURL());
+});
+
+var renderizar = function(event) {
+  /* Act on the event */
+
+var ctx=c.getContext("2d");
+ ctx.drawImage(izquierda,0,0,400,300);
+ ctx.drawImage(central,400,0,400,300);
+ ctx.drawImage(derecha,800,0,400,300);
+ ctx.drawImage(imgTag,0,300,640,300);
+ ctx.font = "bold 16px Arial";
+ ctx.fillText("Elemento    : < Estacion de Bomberos >", 700, 300);
+ ctx.fillText("Distancia   : < 20 mts. >", 700, 350);
+ ctx.fillText("Carretera   : < mexico - acapulco >", 700, 400);
+ ctx.fillText("Tramo       : < A-0001-01-1 >", 700, 450);
+ ctx.fillText("Estacion    : < Cad 100+10 >", 700, 500);
+ ctx.fillText("Coordenadas : < 99.0000, -44.0000 >", 700, 550);
+ //guardarImg(c.toDataURL());
+
+
+  $( "#dialog" ).dialog( "open" );
+}
+
+$("#ver").click(renderizar);
+
+
+$("#lista").click(function(event) {
+    window.open('list.html')
+
+});
+
+
+function guardarImg(img){
+
+  $.post('includes/guardarFoto.php', {img: img}, function(data, textStatus, xhr) {
+    /*optional stuff to do after success */
+    alert("Su imagen ha sido guardada con el id= "+data);
+  });
+
+}
+
+    $( "#dialog" ).dialog({
+      autoOpen: false,
+      width: 1200,
+      height: 600
+    });
+ 
+
+
+</script>
+</body>
+</html>

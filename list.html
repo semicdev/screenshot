@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	
+	<link rel="stylesheet" href="http://sctcloud.com.mx/tools/cdn/bootstrap/3.2.0/css/bootstrap.min.css">
+	<style type="text/css">
+	#lista li{
+		cursor: pointer;
+
+	}
+	#lista li:hover{
+		color: #eee;
+		
+	}
+	</style>
+</head>
+<body class="container">
+	<div class="row">
+		<div class="col-lg-12"><h1 class="text-center">Imagenes Generadas por ScreenShot</h1><p class="text-center">guardadas como datos binarios</p></div>
+		<div class="col-lg-3">
+			<ul id="lista"></ul>
+		</div>
+		<div id="imgContainer" class="col-lg-9"></div>
+	</div>
+
+
+
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+var verImagen = function(img){
+    var imgTag = $('<img>');
+		   imgTag.attr({
+		   	class: "col-lg-12",
+			src: img
+		});
+	$('#imgContainer').html(imgTag);	   
+};
+
+var getImgById = function(){
+
+	$.ajax({
+		url: 'includes/getimgbyid.php',
+		type: "POST",
+		data: {id: $(this).data("id")},
+	})
+	.done(function(data) {
+		verImagen(data);
+	});
+};
+
+function traerLista(){
+
+$.getJSON('includes/get_all.php', {param1: 'value1'}, function(json, textStatus) {
+/*		$.each(json, function(index, val) {
+			var li = $('<li>');
+			li.append(val.file._id.$id);
+			li.data('id', val.file._id.$id );
+			li.click(getImgById);
+			$('#lista').html(li);
+			console.log(val);
+		});*/
+
+		var lista = $.map(json, function(item, index) {
+			var li = $('<li>');
+			li.append(item.file._id.$id);
+			li.data('id', item.file._id.$id );
+			li.click(getImgById);
+			console.log(item);
+			return li;
+		});
+		$('#lista').html(lista);
+		
+});
+}
+
+setInterval(traerLista,5000);
+
+
+
+traerLista();
+
+</script>
+</body>
+</html>
